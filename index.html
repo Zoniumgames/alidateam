@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Alida Metrics</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #eef2f7;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background-color: #0055aa;
+      color: white;
+      padding: 20px 0;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    main {
+      padding: 30px;
+      max-width: 960px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.05);
+    }
+    .hidden { display: none; }
+    .btn {
+      padding: 10px 20px;
+      background: #0055aa;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      transition: background 0.3s ease;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: #003d80;
+    }
+    input[type="text"], input[type="password"] {
+      padding: 10px;
+      margin: 10px 0;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    .login-box, .start-screen, #formularioAgregar {
+      text-align: center;
+      margin: 30px auto;
+      max-width: 400px;
+    }
+    table {
+      width: 100%;
+      margin-top: 30px;
+      border-collapse: separate;
+      border-spacing: 0 8px;
+    }
+    th, td {
+      background: #f9f9f9;
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid #e0e0e0;
+      border-radius: 4px;
+    }
+    th {
+      background-color: #e6f0ff;
+      font-weight: 600;
+    }
+    .estrella {
+      font-size: 22px;
+      cursor: pointer;
+      color: #ccc;
+      transition: color 0.2s ease;
+    }
+    .estrella.activa {
+      color: #ffc107;
+    }
+    #loginError {
+      color: red;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Alida's Team</h1>
+</header>
+
+<main>
+
+  <!-- Pantalla de inicio -->
+  <div class="start-screen" id="startScreen">
+    <h2>Selecciona modo de acceso</h2>
+    <button class="btn" onclick="seleccionarModo('master')">Entrar como Supervisor</button>
+    <button class="btn" onclick="seleccionarModo('agente')">Entrar como Agente</button>
+  </div>
+
+  <!-- Login del Maestro -->
+  <div class="login-box hidden" id="loginBox">
+    <h2>Login Maestro</h2>
+    <input type="text" id="user" placeholder="Usuario" autofocus>
+    <input type="password" id="password" placeholder="Contraseña">
+    <button class="btn" onclick="login()">Ingresar</button>
+    <div id="loginError"></div>
+  </div>
+
+  <!-- Formulario para agregar agentes -->
+  <div id="formularioAgregar" class="hidden">
+    <h3>Agregar nuevo agente</h3>
+    <input type="text" id="nombre" placeholder="Nombre del agente">
+    <input type="text" id="metrica" placeholder="Métrica">
+    <input type="text" id="comentario" placeholder="MIA Category">
+    <button class="btn" onclick="agregarAgente()">Agregar</button>
+    <button class="btn" onclick="eliminarTodos()">Eliminar Todos</button>
+  </div>
+
+  <!-- Tabla de agentes -->
+  <table class="hidden" id="tabla">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Métrica</th>
+        <th>MIA Category</th>
+        <th>Estrellas</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="cuerpoTabla">
+      <!-- Agentes se insertan aquí -->
+    </tbody>
+  </table>
+
+</main>
+
+<!-- Firebase SDKs (compat) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyA-qlUtaVS5vy1-K0W67A7SMUZJcOft3B4",
+    authDomain: "dashboard-alida.firebaseapp.com",
+    databaseURL: "https://dashboard-alida-default-rtdb.firebaseio.com",
+    projectId: "dashboard-alida",
+    storageBucket: "dashboard-alida.appspot.com",
+    messagingSenderId: "181620816636",
+    appId: "1:181620816636:web:1ca6c2d923b1cd532c7579",
+    measurementId: "G-JEGJXGTC82"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  const agentesRef = db.ref("agentes");
+  let modo = ""; // 'master' o 'agente'
+
+  const USUARIO = "admin";
+  const PASSWORD = "1234";
+
+  function seleccionarModo(tipo) {
+    modo = tipo;
+    document.getElementById("startScreen").classList.add("hidden");
+
+    if (tipo === 'master') {
+      document.getElementById("loginBox").classList.remove("hidden");
+      setTimeout(() => document.getElementById("user").focus(), 100);
+    } else {
+      document.getElementById("tabla").classList.remove("hidden");
+    }
+  }
+
+function login() {
+  const user = document.getElementById("user").value.trim();
+  const password = document.getElementById("password").value.trim(); // esta línea corregida
+  const error = document.getElementById("loginError");
+
+  if (user === USUARIO && password === PASSWORD) {
+    modo = "master";
+
+    // Establecer el modo en Firebase
+    firebase.database().ref("modo").set("master").then(() => {
+      document.getElementById("loginBox").classList.add("hidden");
+      document.getElementById("formularioAgregar").classList.remove("hidden");
+      document.getElementById("tabla").classList.remove("hidden");
+      error.textContent = "";
+    }).catch((err) => {
+      console.error("Error al escribir el modo en Firebase:", err);
+      error.textContent = "Error al iniciar sesión. Intenta de nuevo.";
+    });
+
+  } else {
+    error.textContent = "Credenciales incorrectas";
+  }
+}
+
+  function agregarAgente() {
+    const nombre = document.getElementById("nombre").value.trim();
+    const metrica = document.getElementById("metrica").value.trim();
+    const comentario = document.getElementById("comentario").value.trim();
+
+    if (!nombre || !metrica || !comentario) {
+      alert("Completa todos los campos.");
+      return;
+    }
+
+    const nuevoAgente = {
+      nombre,
+      metrica,
+      comentario,
+      estrellas: 0
+    };
+
+    agentesRef.push(nuevoAgente);
+
+    document.getElementById("nombre").value = "";
+    document.getElementById("metrica").value = "";
+    document.getElementById("comentario").value = "";
+  }
+
+  function eliminarAgente(id) {
+    if (modo !== "master") {
+        alert("Solo el maestro puede eliminar agentes");
+        return; // Solo el maestro puede eliminar
+    }
+
+    if (confirm("¿Estás seguro de eliminar este agente?")) {
+        agentesRef.child(id).remove()
+            .then(() => {
+                alert("Agente eliminado con éxito");
+            })
+            .catch(error => {
+                console.error("Error al eliminar el agente: ", error);
+                alert("Hubo un error al eliminar el agente");
+            });
+    }
+}
+
+  function eliminarTodos() {
+    if (modo !== "master") {
+        alert("Solo el maestro puede eliminar todos los agentes");
+        return; // Solo el maestro puede eliminar todos
+    }
+
+    if (confirm("¿Estás seguro de eliminar todos los agentes?")) {
+        agentesRef.remove()
+            .then(() => {
+                alert("Todos los agentes han sido eliminados");
+            })
+            .catch(error => {
+                console.error("Error al eliminar todos los agentes: ", error);
+                alert("Hubo un error al eliminar todos los agentes");
+            });
+    }
+}
+
+  function renderizarTabla(agentesData) {
+    const cuerpo = document.getElementById("cuerpoTabla");
+    cuerpo.innerHTML = "";
+
+    Object.entries(agentesData || {}).forEach(([id, agente]) => {
+      const fila = document.createElement("tr");
+
+      let estrellasHTML = "";
+      for (let i = 0; i < 5; i++) {
+        estrellasHTML += `<span class="estrella ${i < agente.estrellas ? 'activa' : ''}" onclick="clickEstrella('${id}', ${i + 1})">&#9733;</span>`;
+      }
+
+      fila.innerHTML = `
+        <td>${agente.nombre}</td>
+        <td>${agente.metrica}</td>
+        <td>${agente.comentario}</td>
+        <td>${estrellasHTML}</td>
+        <td><button class="btn" onclick="eliminarAgente('${id}')">Eliminar</button></td>
+      `;
+      cuerpo.appendChild(fila);
+    });
+  }
+
+  agentesRef.on("value", snapshot => {
+    const data = snapshot.val();
+    renderizarTabla(data);
+  });
+
+  function clickEstrella(id, cantidad) {
+    if (modo === 'master') return;
+    agentesRef.child(id).update({ estrellas: cantidad });
+  }
+</script>
+
+</body>
+</html>
