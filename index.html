@@ -3,88 +3,319 @@
 <head>
   <meta charset="UTF-8">
   <title>Alida Metrics</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #eef2f7;
-      margin: 0;
-      padding: 0;
-      color: #333;
-    }
-    header {
-      background-color: #0055aa;
-      color: white;
-      padding: 20px 0;
-      text-align: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    main {
-      padding: 30px;
-      max-width: 960px;
-      margin: 40px auto;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 0 12px rgba(0,0,0,0.05);
-    }
-    .hidden { display: none; }
-    .btn {
-      padding: 10px 20px;
-      background: #0055aa;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-weight: bold;
-      transition: background 0.3s ease;
-      cursor: pointer;
-    }
-    .btn:hover {
-      background: #003d80;
-    }
-    input[type="text"], input[type="password"] {
-      padding: 10px;
-      margin: 10px 0;
-      width: 100%;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 14px;
-      box-sizing: border-box;
-    }
-    .login-box, .start-screen, #formularioAgregar {
-      text-align: center;
-      margin: 30px auto;
-      max-width: 400px;
-    }
-    table {
-      width: 100%;
-      margin-top: 30px;
-      border-collapse: separate;
-      border-spacing: 0 8px;
-    }
-    th, td {
-      background: #f9f9f9;
-      padding: 14px;
-      text-align: left;
-      border-bottom: 1px solid #e0e0e0;
-      border-radius: 4px;
-    }
-    th {
-      background-color: #e6f0ff;
-      font-weight: 600;
-    }
-    .estrella {
-      font-size: 22px;
-      cursor: pointer;
-      color: #ccc;
-      transition: color 0.2s ease;
-    }
-    .estrella.activa {
-      color: #ffc107;
-    }
-    #loginError {
-      color: red;
-      margin-top: 10px;
-      font-weight: bold;
-    }
+<style>
+:root {
+  --magenta: #E20074;
+  --magenta-oscuro: #B0005C;
+  --blanco-suave: #f9f9fb;
+  --blanco-oscuro: #ececf1;
+  --glass-bg: rgba(255, 255, 255, 0.3);
+  --glass-border: rgba(255, 255, 255, 0.25);
+  --radius: 16px;
+  --input-bg: rgba(255, 255, 255, 0.8);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(160deg, var(--blanco-suave), var(--blanco-oscuro));
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Header */
+header {
+  width: 100%;
+  background: linear-gradient(to right, var(--magenta), var(--magenta-oscuro));
+  color: white;
+  padding: 30px 0;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+/* Main */
+main {
+  max-width: 960px;
+  width: 90%;
+  margin: 40px auto;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(6px);
+  transition: all 0.4s ease;
+}
+
+/* Botones */
+.btn {
+  padding: 12px 22px;
+  background: var(--magenta);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 14px rgba(226, 0, 116, 0.3);
+}
+
+.btn:hover {
+  background: var(--magenta-oscuro);
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(226, 0, 116, 0.4);
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.hidden {
+  display: none;
+}
+
+.login-box {
+  position: fixed;
+  top: 100px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 340px;
+  padding: 28px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(18px);
+  animation: fadeSlideIn 0.6s ease-out;
+  z-index: 999;
+  /* Se asegura que no esté sobre el header */
+  top: 150%; /* Lo ajustamos un poco hacia abajo */
+}
+
+.login-box h2 {
+  margin-bottom: 30px;
+  color: var(--magenta);
+  text-align: center;
+  font-size: 1.4rem;
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 14px 16px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  background: var(--input-bg);
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
+  transition: box-shadow 0.3s, transform 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--magenta);
+  transform: scale(1.01);
+}
+
+.form-group label {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  font-size: 14px;
+  color: #999;
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus + label,
+.form-group input:not(:placeholder-shown) + label {
+  top: -10px;
+  left: 10px;
+  background: white;
+  padding: 0 6px;
+  font-size: 12px;
+  color: var(--magenta);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 14px;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: left;
+  transition: background 0.3s;
+}
+
+th {
+  background: #f4f4f7;
+  color: #444;
+}
+
+tr:hover {
+  background: #fcf1f6;
+}
+
+.estrella {
+  font-size: 22px;
+  cursor: pointer;
+  color: #ccc;
+  transition: color 0.2s ease;
+}
+
+.estrella.activa {
+  color: #ffc107;
+}
+
+#loginError {
+  color: red;
+  margin-top: 10px;
+  font-weight: bold;
+  text-align: center;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* Responsivo total */
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 1.8rem;
+  }
+
+  main {
+    padding: 20px;
+  }
+
+  .login-box {
+    width: 95%;
+    padding: 20px;
+  }
+
+  th, td {
+    font-size: 14px;
+  }
+}
+
+/* Estilo para la pantalla de inicio */
+.start-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(160deg, var(--blanco-suave), var(--blanco-oscuro));
+  text-align: center;
+  padding: 0 20px;
+  visibility: visible; /* Asegura que la pantalla no esté oculta */
+  opacity: 1; /* Asegura que sea visible */
+  transition: opacity 0.3s ease; /* Transición para la visibilidad */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+}
+
+.start-screen.hidden {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.start-screen h2 {
+  font-size: 1.8rem;
+  color: var(--magenta);
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 2px solid var(--magenta);
+  border-radius: 10px;
+  letter-spacing: 1px;
+}
+
+.start-screen .role-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  max-width: 350px; /* Contenedor más pequeño */
+  margin: 0 auto; /* Centrado de los botones */
+}
+
+.start-screen .role-buttons button {
+  padding: 12px 20px;
+  background: var(--magenta);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  box-shadow: 0 6px 14px rgba(226, 0, 116, 0.3);
+  width: 100%; /* Mantener el tamaño uniforme */
+}
+
+.start-screen .role-buttons button:hover {
+  background-color: var(--magenta-oscuro);
+  transform: translateY(-2px);
+}
+
+.start-screen .role-buttons button:active {
+  transform: scale(0.98);
+}
+
+/* Estilo para el borde del texto "Modo de acceso" */
+.start-screen h2 {
+  border: 1px solid var(--magenta);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .start-screen h2 {
+    font-size: 1.5rem;
+  }
+
+  .start-screen .role-buttons button {
+    font-size: 14px;
+    padding: 10px 15px;
+  }
+}
   </style>
 </head>
 <body>
@@ -95,23 +326,20 @@
 
 <main>
 
-  <!-- Pantalla de inicio -->
   <div class="start-screen" id="startScreen">
-    <h2>Selecciona modo de acceso</h2>
-    <button class="btn" onclick="seleccionarModo('master')">Entrar como Supervisor</button>
-    <button class="btn" onclick="seleccionarModo('agente')">Entrar como Agente</button>
+    <h2>Modo de acceso</h2>
+    <button class="btn" onclick="seleccionarModo('master')">Supervisora</button>
+    <button class="btn" onclick="seleccionarModo('agente')">Agente</button>
   </div>
 
-  <!-- Login del Maestro -->
   <div class="login-box hidden" id="loginBox">
-    <h2>Login Maestro</h2>
+    <h2>Login Supervisora</h2>
     <input type="text" id="user" placeholder="Usuario" autofocus>
     <input type="password" id="password" placeholder="Contraseña">
     <button class="btn" onclick="login()">Ingresar</button>
     <div id="loginError"></div>
   </div>
 
-  <!-- Formulario para agregar agentes -->
   <div id="formularioAgregar" class="hidden">
     <h3>Agregar nuevo agente</h3>
     <input type="text" id="nombre" placeholder="Nombre del agente">
@@ -121,7 +349,6 @@
     <button class="btn" onclick="eliminarTodos()">Eliminar Todos</button>
   </div>
 
-  <!-- Tabla de agentes -->
   <table class="hidden" id="tabla">
     <thead>
       <tr>
@@ -132,17 +359,14 @@
         <th>Acciones</th>
       </tr>
     </thead>
-    <tbody id="cuerpoTabla">
-      <!-- Agentes se insertan aquí -->
-    </tbody>
+    <tbody id="cuerpoTabla"></tbody>
   </table>
 
 </main>
 
-<!-- Firebase SDKs (compat) -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-
+<!-- ... tu head y estilos se mantienen igual ... -->
 <script>
   const firebaseConfig = {
     apiKey: "AIzaSyA-qlUtaVS5vy1-K0W67A7SMUZJcOft3B4",
@@ -161,7 +385,7 @@
   let modo = ""; // 'master' o 'agente'
 
   const USUARIO = "admin";
-  const PASSWORD = "1234";
+  const PASSWORD = "password"; // corregido
 
   function seleccionarModo(tipo) {
     modo = tipo;
@@ -175,20 +399,26 @@
     }
   }
 
-function login() {
+  function login() {
   const user = document.getElementById("user").value.trim();
-  const password = document.getElementById("password").value.trim(); // esta línea corregida
+  const password = document.getElementById("password").value.trim();
   const error = document.getElementById("loginError");
 
   if (user === USUARIO && password === PASSWORD) {
     modo = "master";
 
-    // Establecer el modo en Firebase
     firebase.database().ref("modo").set("master").then(() => {
       document.getElementById("loginBox").classList.add("hidden");
       document.getElementById("formularioAgregar").classList.remove("hidden");
       document.getElementById("tabla").classList.remove("hidden");
       error.textContent = "";
+
+      // Fuerza re-render con datos actuales
+      agentesRef.once("value").then(snapshot => {
+        const data = snapshot.val();
+        renderizarTabla(data);
+      });
+
     }).catch((err) => {
       console.error("Error al escribir el modo en Firebase:", err);
       error.textContent = "Error al iniciar sesión. Intenta de nuevo.";
@@ -213,7 +443,8 @@ function login() {
       nombre,
       metrica,
       comentario,
-      estrellas: 0
+      estrellas: 0,
+      maxEstrellas: 5
     };
 
     agentesRef.push(nuevoAgente);
@@ -226,38 +457,54 @@ function login() {
   function eliminarAgente(id) {
     if (modo !== "master") {
         alert("Solo el maestro puede eliminar agentes");
-        return; // Solo el maestro puede eliminar
+        return;
     }
 
     if (confirm("¿Estás seguro de eliminar este agente?")) {
         agentesRef.child(id).remove()
-            .then(() => {
-                alert("Agente eliminado con éxito");
-            })
+            .then(() => alert("Agente eliminado con éxito"))
             .catch(error => {
                 console.error("Error al eliminar el agente: ", error);
                 alert("Hubo un error al eliminar el agente");
             });
     }
-}
+  }
 
   function eliminarTodos() {
     if (modo !== "master") {
         alert("Solo el maestro puede eliminar todos los agentes");
-        return; // Solo el maestro puede eliminar todos
+        return;
     }
 
     if (confirm("¿Estás seguro de eliminar todos los agentes?")) {
         agentesRef.remove()
-            .then(() => {
-                alert("Todos los agentes han sido eliminados");
-            })
+            .then(() => alert("Todos los agentes han sido eliminados"))
             .catch(error => {
                 console.error("Error al eliminar todos los agentes: ", error);
                 alert("Hubo un error al eliminar todos los agentes");
             });
     }
-}
+  }
+
+  function modificarMaxEstrellas(id, cambio) {
+    agentesRef.child(id).get().then(snapshot => {
+      if (!snapshot.exists()) return;
+      const agente = snapshot.val();
+      const nuevaCantidad = Math.max(1, (agente.maxEstrellas || 5) + cambio);
+      agentesRef.child(id).update({ maxEstrellas: nuevaCantidad });
+    });
+  }
+
+  function clickEstrella(id, cantidad) {
+    if (modo === 'master') return;
+    agentesRef.child(id).get().then(snapshot => {
+      const data = snapshot.val();
+      const max = data.maxEstrellas || 5;
+      if (cantidad <= max) {
+        agentesRef.child(id).update({ estrellas: cantidad });
+      }
+    });
+  }
 
   function renderizarTabla(agentesData) {
     const cuerpo = document.getElementById("cuerpoTabla");
@@ -267,8 +514,18 @@ function login() {
       const fila = document.createElement("tr");
 
       let estrellasHTML = "";
-      for (let i = 0; i < 5; i++) {
+      const maxEstrellas = agente.maxEstrellas || 5;
+      for (let i = 0; i < maxEstrellas; i++) {
         estrellasHTML += `<span class="estrella ${i < agente.estrellas ? 'activa' : ''}" onclick="clickEstrella('${id}', ${i + 1})">&#9733;</span>`;
+      }
+
+      let accionesHTML = `<button class="btn" onclick="eliminarAgente('${id}')">Eliminar</button>`;
+
+      if (modo === "master") {
+        accionesHTML += `
+          <button class="btn" onclick="modificarMaxEstrellas('${id}', 1)">+</button>
+          <button class="btn" onclick="modificarMaxEstrellas('${id}', -1)">−</button>
+        `;
       }
 
       fila.innerHTML = `
@@ -276,7 +533,7 @@ function login() {
         <td>${agente.metrica}</td>
         <td>${agente.comentario}</td>
         <td>${estrellasHTML}</td>
-        <td><button class="btn" onclick="eliminarAgente('${id}')">Eliminar</button></td>
+        <td>${accionesHTML}</td>
       `;
       cuerpo.appendChild(fila);
     });
@@ -286,11 +543,6 @@ function login() {
     const data = snapshot.val();
     renderizarTabla(data);
   });
-
-  function clickEstrella(id, cantidad) {
-    if (modo === 'master') return;
-    agentesRef.child(id).update({ estrellas: cantidad });
-  }
 </script>
 
 </body>
