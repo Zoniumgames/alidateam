@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Alida Metrics</title>
+  <title>Login - Alida Metrics</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -52,7 +52,7 @@
 <body>
 
   <div class="login-box">
-    <h2>Login</h2>
+    <h2>Login Supervisor</h2>
     <input type="text" id="user" placeholder="Usuario">
     <input type="password" id="password" placeholder="Password">
     <button class="btn" onclick="login()">Ingresar</button>
@@ -85,8 +85,8 @@
       const error = document.getElementById("loginError");
 
       if (user === USUARIO && password === PASSWORD) {
-        firebase.database().ref("modo").set("master").then(() => {
-          window.location.href = "panel.html?modo=master";
+        firebase.database().ref("modo").set("616C696461536F6C61726573").then(() => {
+          window.location.href = "panel.html?modo=616C696461536F6C61726573";
         }).catch((err) => {
           console.error("Error al iniciar sesión:", err);
           error.textContent = "Error al iniciar sesión.";

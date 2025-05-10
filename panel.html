@@ -28,7 +28,8 @@
     }
     .hidden { display: none; }
     .btn {
-      padding: 10px 20px;
+      padding: 6px 12px;
+      margin: 2px;
       background: #0055aa;
       color: white;
       border: none;
@@ -36,11 +37,12 @@
       font-weight: bold;
       transition: background 0.3s ease;
       cursor: pointer;
+      font-size: 13px;
     }
     .btn:hover {
       background: #003d80;
     }
-    input[type="text"], input[type="password"] {
+    input[type="text"] {
       padding: 10px;
       margin: 10px 0;
       width: 100%;
@@ -73,9 +75,9 @@
     }
     .estrella {
       font-size: 22px;
-      cursor: pointer;
       color: #ccc;
-      transition: color 0.2s ease;
+      margin-right: 2px;
+      cursor: pointer;
     }
     .estrella.activa {
       color: #ffc107;
@@ -89,8 +91,6 @@
 </header>
 
 <main>
-
-  <!-- Formulario para agregar agentes (solo visible para master) -->
   <div id="formularioAgregar" class="hidden">
     <h3>Agregar nuevo agente</h3>
     <input type="text" id="nombre" placeholder="Nombre del agente">
@@ -100,7 +100,6 @@
     <button class="btn" onclick="eliminarTodos()">Eliminar Todos</button>
   </div>
 
-  <!-- Tabla de agentes -->
   <table class="hidden" id="tabla">
     <thead>
       <tr>
@@ -108,14 +107,11 @@
         <th>Métrica</th>
         <th>MIA Category</th>
         <th>Estrellas</th>
-        <th>Acciones</th>
+        <th id="colAccionesHeader" class="hidden">Acciones</th>
       </tr>
     </thead>
-    <tbody id="cuerpoTabla">
-      <!-- Agentes se insertan aquí -->
-    </tbody>
+    <tbody id="cuerpoTabla"></tbody>
   </table>
-
 </main>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
@@ -134,22 +130,24 @@
   };
 
   firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
-  const agentesRef = db.ref("agentes");
+  const agentesRef = firebase.database().ref("agentes");
 
-  // Detectar modo desde URL
   const modo = new URLSearchParams(window.location.search).get("modo");
+  const esSupervisor = modo === "616C696461536F6C61726573";
 
-  if (modo === "master") {
+  if (esSupervisor) {
     document.getElementById("formularioAgregar").classList.remove("hidden");
-    document.getElementById("tabla").classList.remove("hidden");
-  } else if (modo === "agente") {
-    document.getElementById("tabla").classList.remove("hidden");
-  } else {
-    alert("Modo no válido. Serás redirigido al login.");
-    location.href = "login.html";
+    document.getElementById("colAccionesHeader").classList.remove("hidden");
   }
 
+  if (modo === "agente" || esSupervisor) {
+    document.getElementById("tabla").classList.remove("hidden");
+  } else {
+    alert("Modo inválido. Serás redirigido.");
+    location.href = "index.html";
+  }
+
+  // Función para agregar un nuevo agente
   function agregarAgente() {
     const nombre = document.getElementById("nombre").value.trim();
     const metrica = document.getElementById("metrica").value.trim();
@@ -160,78 +158,98 @@
       return;
     }
 
-    const nuevoAgente = {
+    // Agregar el agente a Firebase
+    agentesRef.push({
       nombre,
       metrica,
       comentario,
-      estrellas: 0
-    };
-
-    agentesRef.push(nuevoAgente);
+      estrellas: 0,
+      limiteEstrellas: 5
+    });
 
     document.getElementById("nombre").value = "";
     document.getElementById("metrica").value = "";
     document.getElementById("comentario").value = "";
   }
 
+  // Función para eliminar un agente
   function eliminarAgente(id) {
-    if (modo !== "master") {
-      alert("Solo el supervisor puede eliminar agentes.");
-      return;
-    }
-
-    if (confirm("¿Estás seguro de eliminar este agente?")) {
-      agentesRef.child(id).remove()
-        .then(() => alert("Agente eliminado."))
-        .catch(error => alert("Error al eliminar agente."));
+    if (!esSupervisor) return;
+    if (confirm("¿Eliminar este agente?")) {
+      agentesRef.child(id).remove();
     }
   }
 
+  // Función para eliminar todos los agentes
   function eliminarTodos() {
-    if (modo !== "master") {
-      alert("Solo el supervisor puede eliminar todos los agentes.");
-      return;
-    }
-
+    if (!esSupervisor) return;
     if (confirm("¿Eliminar todos los agentes?")) {
-      agentesRef.remove()
-        .then(() => alert("Todos los agentes eliminados."))
-        .catch(error => alert("Error al eliminar."));
+      agentesRef.remove();
     }
   }
 
-  function renderizarTabla(agentesData) {
-    const cuerpo = document.getElementById("cuerpoTabla");
-    cuerpo.innerHTML = "";
+  // Función para cambiar el límite de estrellas
+  function cambiarLimite(id, delta) {
+    agentesRef.child(id).get().then(snapshot => {
+      if (!snapshot.exists()) return;
+      let actual = snapshot.val().limiteEstrellas || 5;
+      let nuevo = Math.max(1, Math.min(15, actual + delta));
+      agentesRef.child(id).update({ limiteEstrellas: nuevo });
+    });
+  }
 
-    Object.entries(agentesData || {}).forEach(([id, agente]) => {
-      const fila = document.createElement("tr");
+  // Función para marcar estrellas
+  function marcarEstrella(id, cantidad) {
+    if (esSupervisor) return; // Los supervisores no pueden cambiar las estrellas.
+    agentesRef.child(id).update({ estrellas: cantidad });
+  }
+
+  // Función para renderizar la tabla con los agentes
+  function renderizarTabla(data) {
+    const cuerpo = document.getElementById("cuerpoTabla");
+    cuerpo.innerHTML = ""; // Limpiar el contenido de la tabla
+
+    Object.entries(data || {}).forEach(([id, agente]) => {
+      const max = Math.max(1, Math.min(15, agente.limiteEstrellas || 5));
+      const actual = agente.estrellas || 0;
 
       let estrellasHTML = "";
-      for (let i = 0; i < 5; i++) {
-        estrellasHTML += `<span class="estrella ${i < agente.estrellas ? 'activa' : ''}" onclick="clickEstrella('${id}', ${i + 1})">&#9733;</span>`;
+      for (let i = 1; i <= max; i++) {
+        const activa = i <= actual ? "activa" : "";
+        const onclick = esSupervisor ? "" : `onclick="marcarEstrella('${id}', ${i})"`;
+        estrellasHTML += `<span class="estrella ${activa}" ${onclick}>&#9733;</span>`;
       }
 
+      let accionesHTML = "";
+      if (esSupervisor) {
+        accionesHTML = `
+          <button class="btn" onclick="eliminarAgente('${id}')">Eliminar</button>
+          <button class="btn" onclick="cambiarLimite('${id}', 1)">+</button>
+          <button class="btn" onclick="cambiarLimite('${id}', -1)">−</button>
+        `;
+      }
+
+      const fila = document.createElement('tr');
       fila.innerHTML = `
         <td>${agente.nombre}</td>
         <td>${agente.metrica}</td>
         <td>${agente.comentario}</td>
         <td>${estrellasHTML}</td>
-        <td><button class="btn" onclick="eliminarAgente('${id}')">Eliminar</button></td>
+        ${esSupervisor ? `<td>${accionesHTML}</td>` : ""}
       `;
       cuerpo.appendChild(fila);
     });
   }
 
+  // Obtener los datos de Firebase y renderizar
   agentesRef.on("value", snapshot => {
     const data = snapshot.val();
+    if (!data) {
+      alert("No hay datos disponibles.");
+      return;
+    }
     renderizarTabla(data);
   });
-
-  function clickEstrella(id, cantidad) {
-    if (modo === "master") return; // supervisor no cambia estrellas
-    agentesRef.child(id).update({ estrellas: cantidad });
-  }
 </script>
 
 </body>
