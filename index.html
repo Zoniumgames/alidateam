@@ -2,70 +2,126 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Login - Alida Metrics</title>
+  <title>Alida Metrics</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #eef2f7;
+      background: linear-gradient(135deg, #f2f2f7, #e6e6ec);
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
       margin: 0;
     }
     .login-box {
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px);
+      padding: 0;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      overflow: hidden;
+      animation: fadeIn 1s ease;
+      max-width: 700px;
+      width: 100%;
+    }
+    .login-box img {
       width: 300px;
-      text-align: center;
+      object-fit: cover;
+      transition: opacity 0.8s ease;
+      opacity: 0.9;
+    }
+    
+    .form-content {
+      flex: 1;
+      padding: 40px 30px;
+      background: rgba(255, 255, 255, 0.9);
+    }
+    h2 {
+      color: #333;
+      margin-bottom: 20px;
     }
     input[type="text"], input[type="password"] {
-      padding: 10px;
+      padding: 12px;
       margin: 10px 0;
       width: 100%;
       border: 1px solid #ccc;
-      border-radius: 6px;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border 0.3s;
+    }
+    input[type="text"]:focus, input[type="password"]:focus {
+      border-color: #E20074;
+      outline: none;
     }
     .btn {
-      padding: 10px 20px;
-      background: #0055aa;
+      padding: 12px 20px;
+      background: #E20074;
       color: white;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       font-weight: bold;
       cursor: pointer;
-      margin-top: 10px;
+      width: 100%;
+      margin-top: 15px;
+      transition: background 0.3s, transform 0.2s;
     }
     .btn:hover {
-      background: #003d80;
+      background: #c70068;
+      transform: translateY(-2px);
     }
     #loginError {
       color: red;
-      margin-top: 10px;
+      margin-top: 12px;
       font-weight: bold;
+    }
+    hr {
+      margin: 20px 0;
+      border: none;
+      border-top: 1px solid #ccc;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 700px) {
+      .login-box {
+        flex-direction: column;
+      }
+      .login-box img {
+        width: 100%;
+        height: 180px;
+      }
     }
   </style>
 </head>
 <body>
 
   <div class="login-box">
-    <h2>Login Supervisor</h2>
-    <input type="text" id="user" placeholder="Usuario">
-    <input type="password" id="password" placeholder="Password">
-    <button class="btn" onclick="login()">Ingresar</button>
-    <div id="loginError"></div>
-    <hr>
-    <button class="btn" onclick="location.href='panel.html?modo=agente'">Entrar como Agente</button>
+    <!-- Imagen que tú colocarás -->
+    <img src="loginimage.webp" alt="Login Visual">
+    <div class="form-content">
+      <h2>Supervisor</h2>
+      <input type="text" id="user" placeholder="User">
+      <input type="password" id="password" placeholder="Password">
+      <button class="btn" onclick="login()">Login</button>
+      <div id="loginError"></div>
+      <hr>
+      <button class="btn" onclick="location.href='panel.html?modo=agente'">Agent</button>
+    </div>
   </div>
 
+  <!-- Tu script permanece intacto -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyBEhjbQ7AIL9QlBwwelv0Fnudwf3sSE9N4",
+      apiKey: "AIzaSyA-qlUtaVS5vy1-K0W67A7SMUZJcOft3B4",
       authDomain: "dashboard-alida.firebaseapp.com",
       databaseURL: "https://dashboard-alida-default-rtdb.firebaseio.com",
       projectId: "dashboard-alida",

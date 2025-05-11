@@ -4,110 +4,233 @@
   <meta charset="UTF-8">
   <title>Alida Metrics</title>
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #eef2f7;
-      margin: 0;
-      padding: 0;
-      color: #333;
-    }
-    header {
-      background-color: #0055aa;
-      color: white;
-      padding: 20px 0;
-      text-align: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    main {
-      padding: 30px;
-      max-width: 960px;
-      margin: 40px auto;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 0 12px rgba(0,0,0,0.05);
-    }
-    .hidden { display: none; }
-    .btn {
-      padding: 6px 12px;
-      margin: 2px;
-      background: #0055aa;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-weight: bold;
-      transition: background 0.3s ease;
-      cursor: pointer;
-      font-size: 13px;
-    }
-    .btn:hover {
-      background: #003d80;
-    }
-    input[type="text"] {
-      padding: 10px;
-      margin: 10px 0;
-      width: 100%;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 14px;
-      box-sizing: border-box;
-    }
-    #formularioAgregar {
-      text-align: center;
-      margin: 30px auto;
-      max-width: 400px;
-    }
-    table {
-      width: 100%;
-      margin-top: 30px;
-      border-collapse: separate;
-      border-spacing: 0 8px;
-    }
-    th, td {
-      background: #f9f9f9;
-      padding: 14px;
-      text-align: left;
-      border-bottom: 1px solid #e0e0e0;
-      border-radius: 4px;
-    }
-    th {
-      background-color: #e6f0ff;
-      font-weight: 600;
-    }
-    .estrella {
-      font-size: 22px;
-      color: #ccc;
-      margin-right: 2px;
-      cursor: pointer;
-    }
-    .estrella.activa {
-      color: #ffc107;
-    }
+  body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(145deg, #f3f4f8, #e6e7ec);
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+.header {
+  background-color: #E20074;
+  color: white;
+  padding: 16px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  flex-wrap: wrap;
+}
+.header-left h1 {
+  margin: 0;
+  font-size: 22px;
+}
+.header-center {
+  flex: 1;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+}
+.header-right .logout-btn {
+  background-color: #f3f4f8;
+  font-size: 13px;
+  color: #E20074;
+}
+.logout-btn:hover {
+  background-color: #c00063;
+}
+
+main {
+  padding: 30px;
+  max-width: 960px;
+  margin: 40px auto;
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.hidden {
+  display: none;
+}
+
+.btn {
+  padding: 10px 16px;
+  margin: 6px 4px;
+  background: #E20074;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-size: 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.btn:hover {
+  background: #bb0060;
+  transform: translateY(-1px);
+}
+
+input[type="text"] {
+  padding: 12px;
+  margin: 12px 0;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 15px;
+  box-sizing: border-box;
+  background: #f8f9fc;
+}
+
+#formularioAgregar {
+  text-align: center;
+  margin: 30px auto;
+  max-width: 460px;
+  background: #fefefe;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+table {
+  width: 100%;
+  margin-top: 30px;
+  border-collapse: separate;
+  border-spacing: 0 12px;
+}
+
+th, td {
+  background: #fcfcfd;
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+th {
+  background-color: #f0e9ff;
+  color: #333;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.estrella {
+  font-size: 22px;
+  color: #ccc;
+  margin-right: 2px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.estrella.activa {
+  color: #E20074;
+}
+
+#formularioAgregar {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  border-radius: 16px;
+  padding: 30px 20px;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+
+#formularioAgregar {
+  max-width: 800px;
+  margin: 40px auto;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  background: white;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: row;
+  min-height: 300px;
+}
+
+.form-image {
+  flex: 1;
+  background-image: url('form.webp'); /* tu imagen */
+  background-size: cover;
+  background-position: center left;
+  position: relative;
+}
+
+/* Degradado de desvanecimiento hacia la derecha */
+.form-image::after {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0; right: 0; width: 40%;
+  background: linear-gradient(to right, rgba(255,255,255,0) 0%, white 100%);
+}
+
+.form-fields {
+  flex: 1;
+  padding: 30px 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: white;
+}
+
+.form-fields h3 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.form-fields input,
+.form-fields .btn {
+  margin-bottom: 12px;
+  font-size: 14px;
+  border-radius: 6px;
+}
+
+
   </style>
 </head>
 <body>
 
-<header>
-  <h1>Alida's Team</h1>
+<header class="header">
+  <div class="header-left">
+    <h1 title="Agent Leaderboard & Input Driven Accountability">ALIDA</h1>
+  </div>
+  <div class="header-center" id="fechaActual">11 de mayo de 2025</div>
+  <div class="header-right">
+    <button class="btn logout-btn" onclick="location.href='index.html'">Logout</button>
+  </div>
 </header>
 
 <main>
   <div id="formularioAgregar" class="hidden">
-    <h3>Agregar nuevo agente</h3>
-    <input type="text" id="nombre" placeholder="Nombre del agente">
-    <input type="text" id="metrica" placeholder="Métrica">
-    <input type="text" id="comentario" placeholder="MIA Category">
-    <button class="btn" onclick="agregarAgente()">Agregar</button>
-    <button class="btn" onclick="eliminarTodos()">Eliminar Todos</button>
+  <div class="form-container">
+    <div class="form-image"></div>
+    <div class="form-fields">
+      <h3>Add New Agent</h3>
+      <input type="text" id="nombre" placeholder="Agent's Name">
+      <input type="text" id="metrica" placeholder="Metric">
+      <input type="text" id="comentario" placeholder="MIA Category">
+      <button class="btn" onclick="agregarAgente()">Add</button>
+      <button class="btn" onclick="eliminarTodos()">Clear All</button>
+    </div>
   </div>
+</div>
 
   <table class="hidden" id="tabla">
     <thead>
       <tr>
-        <th>Nombre</th>
-        <th>Métrica</th>
+        <th>Agent</th>
+        <th>Metric</th>
         <th>MIA Category</th>
-        <th>Estrellas</th>
-        <th id="colAccionesHeader" class="hidden">Acciones</th>
+        <th>Stars</th>
+        <th id="colAccionesHeader" class="hidden">Actions</th>
       </tr>
     </thead>
     <tbody id="cuerpoTabla"></tbody>
@@ -119,7 +242,7 @@
 
 <script>
   const firebaseConfig = {
-    apiKey: "AIzaSyBEhjbQ7AIL9QlBwwelv0Fnudwf3sSE9N4",
+    apiKey: "AIzaSyA-qlUtaVS5vy1-K0W67A7SMUZJcOft3B4",
     authDomain: "dashboard-alida.firebaseapp.com",
     databaseURL: "https://dashboard-alida-default-rtdb.firebaseio.com",
     projectId: "dashboard-alida",
@@ -143,7 +266,7 @@
   if (modo === "agente" || esSupervisor) {
     document.getElementById("tabla").classList.remove("hidden");
   } else {
-    alert("Modo inválido. Serás redirigido.");
+    alert("Not found, Redirecting....");
     location.href = "index.html";
   }
 
@@ -154,7 +277,7 @@
     const comentario = document.getElementById("comentario").value.trim();
 
     if (!nombre || !metrica || !comentario) {
-      alert("Completa todos los campos.");
+      alert("Fill out the Form");
       return;
     }
 
@@ -175,7 +298,7 @@
   // Función para eliminar un agente
   function eliminarAgente(id) {
     if (!esSupervisor) return;
-    if (confirm("¿Eliminar este agente?")) {
+    if (confirm("¿Remove this Agent?")) {
       agentesRef.child(id).remove();
     }
   }
@@ -183,7 +306,7 @@
   // Función para eliminar todos los agentes
   function eliminarTodos() {
     if (!esSupervisor) return;
-    if (confirm("¿Eliminar todos los agentes?")) {
+    if (confirm("¿Clear all?")) {
       agentesRef.remove();
     }
   }
@@ -223,7 +346,7 @@
       let accionesHTML = "";
       if (esSupervisor) {
         accionesHTML = `
-          <button class="btn" onclick="eliminarAgente('${id}')">Eliminar</button>
+          <button class="btn" onclick="eliminarAgente('${id}')">Remove</button>
           <button class="btn" onclick="cambiarLimite('${id}', 1)">+</button>
           <button class="btn" onclick="cambiarLimite('${id}', -1)">−</button>
         `;
@@ -245,11 +368,21 @@
   agentesRef.on("value", snapshot => {
     const data = snapshot.val();
     if (!data) {
-      alert("No hay datos disponibles.");
+      alert("No data");
       return;
     }
     renderizarTabla(data);
   });
+  
+  
+function mostrarFecha() {
+  const ahora = new Date();
+  const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  const fechaFormateada = ahora.toLocaleDateString('en-ES', opciones);
+  document.getElementById("fechaActual").textContent = fechaFormateada.charAt(0).toUpperCase() + fechaFormateada.slice(1);
+}
+mostrarFecha();
+
 </script>
 
 </body>
