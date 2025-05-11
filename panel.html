@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <title>Alida Metrics</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
   body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -21,6 +23,7 @@
   justify-content: space-between;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   flex-wrap: wrap;
+  font-family: "Cal Sans", sans-serif;
 }
 .header-left h1 {
   margin: 0;
@@ -193,6 +196,13 @@ th {
   border-radius: 6px;
 }
 
+.celda-limitada {
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+}
 
   </style>
 </head>
@@ -204,7 +214,7 @@ th {
   </div>
   <div class="header-center" id="fechaActual">11 de mayo de 2025</div>
   <div class="header-right">
-    <button class="btn logout-btn" onclick="location.href='index.html'">Logout</button>
+    <button class="btn logout-btn" title="Log out Session" onclick="location.href='index.html'">Logout<i class="fas fa-right-from-bracket"></i></button>
   </div>
 </header>
 
@@ -228,7 +238,7 @@ th {
       <tr>
         <th>Agent</th>
         <th>Metric</th>
-        <th>MIA Category</th>
+        <th class="celda-limitada">MIA Category</th>
         <th>Stars</th>
         <th id="colAccionesHeader" class="hidden">Actions</th>
       </tr>
@@ -333,7 +343,7 @@ th {
 
     agentesRef.child(id).update({ estrellas: nuevaCantidad });
   });
-  }
+}
 
   // Función para renderizar la tabla con los agentes
   function renderizarTabla(data) {
@@ -364,7 +374,7 @@ th {
       fila.innerHTML = `
         <td>${agente.nombre}</td>
         <td>${agente.metrica}</td>
-        <td>${agente.comentario}</td>
+        <td class="celda-limitada" title="${agente.comentario}">${agente.comentario}</td>
         <td>${estrellasHTML}</td>
         ${esSupervisor ? `<td>${accionesHTML}</td>` : ""}
       `;
