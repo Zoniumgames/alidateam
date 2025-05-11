@@ -323,8 +323,16 @@ th {
 
   // Función para marcar estrellas
   function marcarEstrella(id, cantidad) {
-    if (esSupervisor) return; // Los supervisores no pueden cambiar las estrellas.
-    agentesRef.child(id).update({ estrellas: cantidad });
+  if (esSupervisor) return; // Los supervisores no pueden cambiar las estrellas.
+
+  agentesRef.child(id).child("estrellas").once("value", function(snapshot) {
+    const estrellasActuales = snapshot.val() || 0;
+
+    // Si se hace clic en la misma cantidad ya marcada, quitar todas (poner 0)
+    const nuevaCantidad = (estrellasActuales === cantidad) ? 0 : cantidad;
+
+    agentesRef.child(id).update({ estrellas: nuevaCantidad });
+  });
   }
 
   // Función para renderizar la tabla con los agentes
