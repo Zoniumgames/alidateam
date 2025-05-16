@@ -388,15 +388,6 @@ fetch("https://firebase-config-server.onrender.com/firebase-config")
     });
   }
 
-  // Obtener los datos de Firebase y renderizar
-  agentesRef.on("value", snapshot => {
-    const data = snapshot.val();
-    if (!data) {
-      alert("No data");
-      return;
-    }
-    renderizarTabla(data);
-  });
   
   
 function mostrarFecha() {
