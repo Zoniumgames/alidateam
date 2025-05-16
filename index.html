@@ -122,17 +122,14 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyA-qlUtaVS5vy1-K0W67A7SMUZJcOft3B4",
-      authDomain: "dashboard-alida.firebaseapp.com",
-      databaseURL: "https://dashboard-alida-default-rtdb.firebaseio.com",
-      projectId: "dashboard-alida",
-      storageBucket: "dashboard-alida.appspot.com",
-      messagingSenderId: "181620816636",
-      appId: "1:181620816636:web:1ca6c2d923b1cd532c7579",
-      measurementId: "G-JEGJXGTC82"
-    };
+    fetch("https://firebase-config-server.onrender.com")
+  .then(res => res.json())
+  .then(firebaseConfig => {
     firebase.initializeApp(firebaseConfig);
+  })
+  .catch(err => {
+    console.error("Error al cargar la config de Firebase:", err);
+  });
 
     const USUARIO = "asolares5";
     const PASSWORD = "1234";
