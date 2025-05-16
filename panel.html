@@ -405,6 +405,8 @@ function mostrarFecha() {
   const fechaFormateada = ahora.toLocaleDateString('en-ES', opciones);
   document.getElementById("fechaActual").textContent = fechaFormateada.charAt(0).toUpperCase() + fechaFormateada.slice(1);
 }
+
+setInterval(mostrarFecha,1000);
 mostrarFecha();
 
 </script>
