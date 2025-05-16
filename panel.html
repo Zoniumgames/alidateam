@@ -251,17 +251,40 @@ th {
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
 <script>
-  fetch("https://firebase-config-server.onrender.com")
+  let agentesRef;
+let esSupervisor;
+
+fetch("https://firebase-config-server.onrender.com")
   .then(res => res.json())
   .then(firebaseConfig => {
     firebase.initializeApp(firebaseConfig);
+    agentesRef = firebase.database().ref("agentes");
+
+    const modo = new URLSearchParams(window.location.search).get("modo");
+    esSupervisor = modo === "616C696461536F6C61726573";
+
+    if (esSupervisor) {
+      document.getElementById("formularioAgregar").classList.remove("hidden");
+      document.getElementById("colAccionesHeader").classList.remove("hidden");
+    }
+
+    if (modo === "agente" || esSupervisor) {
+      document.getElementById("tabla").classList.remove("hidden");
+    } else {
+      alert("Not found, Redirecting....");
+      location.href = "index.html";
+    }
+
+    // Escuchar cambios
+    agentesRef.on("value", snapshot => {
+      renderizarTabla(snapshot.val());
+    });
   })
   .catch(err => {
     console.error("Error al cargar la config de Firebase:", err);
   });
-  
-  const agentesRef = firebase.database().ref("agentes");
 
+  
   const modo = new URLSearchParams(window.location.search).get("modo");
   const esSupervisor = modo === "616C696461536F6C61726573";
 
