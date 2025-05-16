@@ -122,7 +122,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <script>
-    fetch("https://firebase-config-server.onrender.com")
+    fetch("https://firebase-config-server.onrender.com/firebase-config")
   .then(res => res.json())
   .then(firebaseConfig => {
     firebase.initializeApp(firebaseConfig);
