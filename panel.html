@@ -254,7 +254,7 @@ th {
   let agentesRef;
 let esSupervisor;
 
-fetch("https://firebase-config-server.onrender.com")
+fetch("https://firebase-config-server.onrender.com/firebase-config")
   .then(res => res.json())
   .then(firebaseConfig => {
     firebase.initializeApp(firebaseConfig);
