@@ -285,20 +285,6 @@ fetch("https://firebase-config-server.onrender.com")
   });
 
   
-  const modo = new URLSearchParams(window.location.search).get("modo");
-  const esSupervisor = modo === "616C696461536F6C61726573";
-
-  if (esSupervisor) {
-    document.getElementById("formularioAgregar").classList.remove("hidden");
-    document.getElementById("colAccionesHeader").classList.remove("hidden");
-  }
-
-  if (modo === "agente" || esSupervisor) {
-    document.getElementById("tabla").classList.remove("hidden");
-  } else {
-    alert("Not found, Redirecting....");
-    location.href = "index.html";
-  }
 
   // Función para agregar un nuevo agente
   function agregarAgente() {
