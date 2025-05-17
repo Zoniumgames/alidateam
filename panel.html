@@ -204,9 +204,55 @@ th {
   position: relative;
 }
 
+/* === Loader === */
+.loader-container {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+.loader-container.fade-out {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.loader-spinner {
+  width: 50px;
+  height: 50px;
+  border: 6px solid #ccc;
+  border-top: 6px solid #E20074;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+.loader-text {
+  font-family: 'Cal Sans', sans-serif;
+  font-size: 16px;
+  color: #555;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+
   </style>
 </head>
 <body>
+
+<!-- Pantalla de Carga -->
+<div id="loader" class="loader-container">
+  <div class="loader-spinner"></div>
+  <p class="loader-text" id="loaderText">Cargando...</p>
+</div>
 
 <header class="header">
   <div class="header-left">
@@ -275,9 +321,16 @@ fetch("https://firebase-config-server.onrender.com/firebase-config")
       location.href = "index.html";
     }
 
-    // Escuchar cambios
+    // Escuchar cambios de datos y ocultar loader cuando hay datos
     agentesRef.on("value", snapshot => {
       renderizarTabla(snapshot.val());
+
+      // Ocultar el loader con animación
+      const loader = document.getElementById("loader");
+      if (loader) {
+        loader.classList.add("fade-out");
+        setTimeout(() => loader.remove(), 700);
+      }
     });
   })
   .catch(err => {
@@ -396,8 +449,18 @@ function mostrarFecha() {
   const fechaFormateada = ahora.toLocaleDateString('en-US', opciones);
   document.getElementById("fechaActual").textContent = fechaFormateada.charAt(0).toUpperCase() + fechaFormateada.slice(1);
 }
-
+ 
 mostrarFecha();
+
+// Mensajes animados para el loader
+const mensajesCarga = ["Cargando...", "Recuperando datos...", "Conectando..."];
+let mensajeIndex = 0;
+
+const loaderText = document.getElementById("loaderText");
+setInterval(() => {
+  mensajeIndex = (mensajeIndex + 1) % mensajesCarga.length;
+  loaderText.textContent = mensajesCarga[mensajeIndex];
+}, 2000); // cambia cada 2 segundos
 
 </script>
 
